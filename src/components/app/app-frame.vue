@@ -1,20 +1,33 @@
-<style lang='less'>
+<style lang="less">
+.left-menu {
+  &::-webkit-scrollbar {
+    width: 0 !important;
+  }
+  scrollbar-width: none;
+}
 </style>
 <template>
   <div>
-    <Layout class="app-frame" v-if="!loading" :siderCollapsed="siderCollapsed" :siderFixed="layoutConfig.siderFixed">
-      <Sider :theme="layoutConfig.siderTheme">
+    <Layout :siderCollapsed="siderCollapsed" :siderFixed="layoutConfig.siderFixed" class="app-frame" v-if="!loading">
+      <Sider :theme="layoutConfig.siderTheme" class="left-menu">
         <appMenu :theme="layoutConfig.siderTheme"></appMenu>
       </Sider>
       <Layout :headerFixed="layoutConfig.headerFixed">
         <HHeader theme="white">
-          <appHead @openSetting="openSetting=true" :layoutConfig="layoutConfig"></appHead>
+          <appHead :layoutConfig="layoutConfig" @openSetting="openSetting = true"></appHead>
         </HHeader>
-        <SysTabs v-if="layoutConfig.showSystab" homePage="Home"></SysTabs>
+        <SysTabs homePage="Home" v-if="layoutConfig.showSystab"></SysTabs>
         <Content>
           <div class="app-frame-content">
             <!-- <keep-alive> -->
-            <router-view></router-view>
+            <div class="frame-page h-panel">
+              <div class="h-panel-bar" v-if="$route.meta && $route.meta.title">
+                <span class="h-panel-title">{{ $route.meta.title }}</span>
+              </div>
+              <div class="h-panel-body">
+                <router-view></router-view>
+              </div>
+            </div>
             <!-- </keep-alive> -->
           </div>
           <HFooter>
@@ -23,7 +36,7 @@
         </Content>
       </Layout>
     </Layout>
-    <Modal v-model="openSetting" type="drawer-right">
+    <Modal type="drawer-right" v-model="openSetting">
       <appLayoutSetting :layoutConfig="layoutConfig"></appLayoutSetting>
     </Modal>
   </div>
@@ -44,7 +57,7 @@ export default {
       loading: true,
       openSetting: false,
       layoutConfig: {
-        siderTheme: 'white',
+        siderTheme: 'dark',
         showSystab: false,
         headerFixed: true,
         siderFixed: true
@@ -61,7 +74,7 @@ export default {
     const listener = G.addlistener('SYS_MENU_REFRESH', () => {
       this.initMenu();
     });
-    this.$once('hook:beforeDestroy', function () {
+    this.$once('hook:beforeDestroy', function() {
       G.removelistener(listener);
     });
   },

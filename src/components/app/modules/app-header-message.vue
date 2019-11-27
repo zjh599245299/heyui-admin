@@ -1,4 +1,4 @@
-<style lang='less'>
+<style lang="less">
 .app-header-message-vue {
   float: left;
   margin-right: 15px;
@@ -18,7 +18,7 @@
   .message-list-container {
     .common-list-item {
       cursor: pointer;
-      padding: 0px 25px;
+      padding: 0 25px;
       &:hover {
         background: @hover-background-color;
       }
@@ -35,7 +35,7 @@
         color: @gray-color;
       }
 
-      &.unReaded .title:before{
+      &.unReaded .title:before {
         content: '';
         position: absolute;
         width: 5px;
@@ -62,14 +62,20 @@
           <span class="h-panel-title">消息</span>
         </div>
         <div class="message-list-container common-list-container">
-          <div class="common-list-item" v-for="m of messageList" :key="m.id" @click="goMessageDetail(m)" :class="{readed: m.isReaded, unReaded: !m.isReaded}">
+          <div
+            class="common-list-item"
+            v-for="m of messageList"
+            :key="m.id"
+            @click="goMessageDetail(m)"
+            :class="{ readed: m.isReaded, unReaded: !m.isReaded }"
+          >
             <div class="common-list-meta">
-              <p class="title">{{m.title}}</p>
-              <p class="description">{{m.description}}</p>
+              <p class="title">{{ m.title }}</p>
+              <p class="description">{{ m.description }}</p>
             </div>
           </div>
         </div>
-        <div v-if="messageList.length>0" class="text-center h-panel-bar"><span class="link">查看更多</span></div>
+        <div v-if="messageList.length > 0" class="text-center h-panel-bar"><span class="link">查看更多</span></div>
       </div>
     </div>
   </DropdownCustom>
@@ -87,10 +93,8 @@ export default {
     this.getMessageList();
   },
   methods: {
-    init() {
-
-    },
-    getMessageList: async function () {
+    init() {},
+    async getMessageList() {
       let resp = await R.Home.getMessageList();
       if (resp.ok) {
         this.messageList = resp.body;
@@ -102,7 +106,6 @@ export default {
   },
   computed: {
     ...mapGetters({
-      user: 'User',
       msgCount: 'msgCount'
     })
   }

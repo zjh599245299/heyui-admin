@@ -1,4 +1,4 @@
-<style lang='less'>
+<style lang="less">
 .a-item-vue {
   padding: 20px 0;
   margin: 0 10px;
@@ -19,9 +19,9 @@
 <template>
   <div class="a-item-vue">
     <Skeleton active :loading="loading">
-      <p class="title">{{item.title}}</p>
+      <p class="title">{{ item.title }}</p>
       <p class="tags"><TagInput v-model="item.tags" readonly></TagInput></p>
-      <pre class="desc">{{item.desc}}</pre>
+      <pre class="desc">{{ item.desc }}</pre>
     </Skeleton>
   </div>
 </template>
@@ -32,20 +32,14 @@ export default {
     loading: Boolean
   },
   data() {
-    return {
-
-    };
+    return {};
   },
   mounted() {
     this.init();
   },
   methods: {
-    init() {
-
-    }
+    init() {}
   },
-  computed: {
-
-  }
+  computed: {}
 };
 </script>

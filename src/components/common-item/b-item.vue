@@ -1,27 +1,18 @@
-<style lang='less'>
-</style>
+<style lang="less"></style>
 <template>
-  <div class="">
-
-  </div>
+  <div class=""></div>
 </template>
 <script>
 export default {
   data() {
-    return {
-
-    };
+    return {};
   },
   mounted() {
     this.init();
   },
   methods: {
-    init() {
-
-    }
+    init() {}
   },
-  computed: {
-
-  }
+  computed: {}
 };
 </script>

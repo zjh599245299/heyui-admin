@@ -15,7 +15,8 @@ module.exports = {
     alias: {
       model: './src/js/model/',
       js: './src/js/',
-      components: './src/components/'
+      components: './src/components/',
+      views: './src/views/'
     },
     global: {
       Utils: [path.resolve(__dirname, 'src/js/common/utils'), 'default'],

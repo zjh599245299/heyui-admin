@@ -2,8 +2,7 @@ const fullMenus = [
   {
     title: 'Dashboard',
     key: 'Home',
-    icon: 'icon-monitor',
-    count: 1
+    icon: 'icon-monitor'
   },
   {
     title: 'Icons',
@@ -79,7 +78,8 @@ const fullMenus = [
       {
         title: 'Markdown编辑器',
         key: 'MarkdownEditor'
-      }, {
+      },
+      {
         title: '百度地图',
         key: 'BaiduMap'
       }
@@ -110,7 +110,7 @@ const fullMenus = [
   }
 ];
 
-const getMenus = function (menuIdList = []) {
+const getMenus = (menuIdList = []) => {
   return getAuthMenu(fullMenus, menuIdList);
 };
 
@@ -128,7 +128,7 @@ let getAuthMenu = (menus, menuIdList) => {
   return configMenu;
 };
 
-const getKeys = function (menus) {
+const getKeys = menus => {
   let keys = [];
   for (let menu of menus) {
     keys.push(menu.key);
@@ -141,12 +141,9 @@ const getKeys = function (menus) {
 
 let fullMenuKeys = getKeys(fullMenus);
 
-const isAuthPage = function (name) {
+const isAuthPage = name => {
   let menus = G.get('SYS_MENUS') || [];
-  if (fullMenuKeys.indexOf(name) > -1 && menus.indexOf(name) == -1) {
-    return false;
-  }
-  return true;
+  return !(fullMenuKeys.indexOf(name) > -1 && menus.indexOf(name) === -1);
 };
 
 export { getMenus, fullMenus, fullMenuKeys, isAuthPage };

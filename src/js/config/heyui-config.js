@@ -5,7 +5,7 @@ import categoryConfig from './category-config';
 
 const heyuiConfig = () => {
   const staticDict = dictConfig();
-  Object.keys(staticDict).forEach((key) => {
+  Object.keys(staticDict).forEach(key => {
     HeyUI.addDict(key, staticDict[key]);
   });
 
