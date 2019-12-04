@@ -1,5 +1,4 @@
 import dictConfig from './dict-config';
-import autocompleteConfig from './autocomplete-config';
 import treeConfig from './tree-config';
 import categoryConfig from './category-config';
 
@@ -12,7 +11,6 @@ const heyuiConfig = () => {
   HeyUI.config('dict.keyName', 'key');
   HeyUI.config('dict.titleName', 'title');
 
-  HeyUI.config('autocomplete.configs', autocompleteConfig());
   HeyUI.config('tree.configs', treeConfig());
   HeyUI.config('category.configs', categoryConfig());
 

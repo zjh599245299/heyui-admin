@@ -17,12 +17,11 @@ const Request = {
     }
   },
   Account: {
-    menus() {
-    }
+    menus() {}
   },
   Login: {
     login(param) {
-      return Ajax.postJson('/login', param);
+      return Ajax.post('/login', param);
     },
     logout(param) {
       return Ajax.post('/logout', param);

@@ -1,8 +1,8 @@
 import Vue from 'vue';
 
 const uriReg = /^((http[s]{0,1}|ftp):\/\/)?[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+\.?/;
-const isUri = function (value) {
-  return (value && value.trim() && uriReg.test(value.trim()));
+const isUri = function(value) {
+  return value && value.trim() && uriReg.test(value.trim());
 };
 
 Vue.directive('url', {
@@ -14,7 +14,7 @@ Vue.directive('url', {
       let pre = '';
       let aft = '';
       if (isUri(text)) {
-        protocol = (text.indexOf('http') != -1 ? '' : 'http://');
+        protocol = text.indexOf('http') !== -1 ? '' : 'http://';
         pre = `<a href="${protocol}${text.trim()}" target="_blank">`;
         aft = `</a>`;
       }

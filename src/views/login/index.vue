@@ -154,7 +154,10 @@ import Login from 'model/login/Login';
 export default {
   data() {
     return {
-      login: Login.parse({}),
+      login: Login.parse({
+        username: 'admin',
+        password: 'admin'
+      }),
       loading: false
     };
   },
@@ -164,9 +167,9 @@ export default {
       this.loading = true;
       R.Login.login(Login.dispose(this.login)).then(resp => {
         if (resp.ok) {
-          let msg = resp.body;
-          Utils.saveLocal('token', msg.value);
-          window.location = '/';
+          const user = resp.data;
+          this.$store.commit('UPDATE_LOGIN_USER', user);
+          this.$router.push('/');
         }
         this.loading = false;
       });

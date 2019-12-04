@@ -1,12 +1,13 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import { UPDATE_ACCOUNT, UPDATE_SIDERCOLLAPSE, UPDATE_MSG_COUNT } from './mutation-types';
+import { UPDATE_LOGIN_USER, UPDATE_ACCOUNT, UPDATE_SIDERCOLLAPSE, UPDATE_MSG_COUNT } from './mutation-types';
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   modules: {},
   state: {
+    LoginUser: Utils.getLocal('login_user', 'json') || {},
     User: {},
     msgCount: {
       messages: 2
@@ -14,6 +15,14 @@ export default new Vuex.Store({
     siderCollapsed: false
   },
   mutations: {
+    [UPDATE_LOGIN_USER](state, data) {
+      state.LoginUser = data;
+      if (data) {
+        Utils.saveLocal('login_user', data);
+      } else {
+        Utils.removeLocal('login_user');
+      }
+    },
     [UPDATE_ACCOUNT](state, data) {
       state.User = data;
     },

@@ -8,9 +8,9 @@ Vue.filter('format', (value, format) => {
   return '';
 });
 
-Vue.filter('distance', (date) => {
+Vue.filter('distance', date => {
   const hours = manba().distance(date, manba.HOUR);
-  if (hours == 0) {
+  if (hours === 0) {
     const mins = manba().distance(date, manba.MINUTE);
     return `${mins}分钟`;
   } else if (hours < 24) {

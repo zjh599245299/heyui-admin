@@ -21,7 +21,7 @@ let list = [
   { id: 33, title: '三级-3', parent: '3' }
 ];
 
-export default function () {
+export default function() {
   return {
     simple: {
       keyName: 'id',
@@ -33,4 +33,4 @@ export default function () {
       }
     }
   };
-};
+}

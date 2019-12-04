@@ -7,14 +7,14 @@ export default utils.extend({}, utils, {
     return (elem.getAttribute && elem.getAttribute('class')) || '';
   },
   hasClass(elem, selector) {
-    let className;
-    className = ` ${selector} `;
-    if (elem.nodeType === 1 && (` ${this.getClass(elem)} `)
-      .replace(rclass, ' ')
-      .indexOf(className) > -1) {
-      return true;
-    }
-
-    return false;
+    const className = ` ${selector} `;
+    return elem.nodeType === 1 && ` ${this.getClass(elem)} `.replace(rclass, ' ').indexOf(className) > -1;
+  },
+  /**
+   * 检查是否登录
+   * @returns {boolean}
+   */ checkLogin() {
+    const token = utils.getLocal2Json('login_user') && utils.getLocal2Json('login_user').token;
+    return !!token;
   }
 });

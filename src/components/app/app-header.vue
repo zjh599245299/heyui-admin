@@ -98,20 +98,12 @@
         noBorder
         class="font20"
         @click="siderCollapsed = !siderCollapsed"
-      ></Button>
+      />
     </div>
+    <Breadcrumb :datas="pageTitles" style="display: inline-block;margin-left: 10px;" />
     <div class="float-right app-header-info">
-      <AutoComplete :showDropdownWhenNoResult="false" v-model="searchText" config="globalSearch" placeholder="全局搜索.."></AutoComplete>
-      <div class="app-header-icon-item" v-tooltip content="系统布局配置" theme="white" @click="showSettingModal">
-        <i class="icon-content-left"></i>
-      </div>
-      <appHeaderMessage></appHeaderMessage>
-      <div class="app-header-icon-item" v-tooltip content="GitHub" theme="white" @click="goGithub">
-        <i class="h-icon-github"></i>
-      </div>
-      <div class="app-header-icon-item" v-tooltip content="教学文档" theme="white" @click="goBook">
-        <i class="h-icon-help"></i>
-      </div>
+      <AutoComplete :showDropdownWhenNoResult="false" v-width="180" v-model="searchText" placeholder="全局搜索..." />
+      <appHeaderMessage />
       <DropdownMenu
         className="app-header-dropdown"
         trigger="hover"
@@ -121,8 +113,8 @@
         :datas="infoMenu"
         @onclick="trigger"
       >
-        <Avatar :src="User.avatar" :width="30">
-          <span>{{ User.name }}</span>
+        <Avatar :src="avatar" :width="30">
+          <span>{{ LoginUser.name }}</span>
         </Avatar>
       </DropdownMenu>
     </div>
@@ -131,7 +123,6 @@
 <script>
 import { mapState } from 'vuex';
 import appHeaderMessage from './modules/app-header-message';
-
 export default {
   components: {
     appHeaderMessage
@@ -142,11 +133,20 @@ export default {
       infoMenu: [
         { key: 'info', title: '个人信息', icon: 'h-icon-user' },
         { key: 'logout', title: '退出登录', icon: 'h-icon-outbox' }
-      ]
+      ],
+      pageTitles: []
     };
   },
+  watch: {
+    $route(to) {
+      this.getBreadCrumbData();
+    }
+  },
   computed: {
-    ...mapState(['User']),
+    ...mapState(['LoginUser']),
+    avatar: function() {
+      return require('../../images/avatar.png');
+    },
     siderCollapsed: {
       get() {
         return this.$store.state.siderCollapsed;
@@ -157,9 +157,29 @@ export default {
     }
   },
   mounted() {
+    this.getBreadCrumbData();
     this.listenResize();
   },
   methods: {
+    getBreadCrumbData() {
+      const routeStacks = this.$route.matched;
+      if (routeStacks && routeStacks.length > 2) {
+        const titles = [];
+        for (let i = 1; i < routeStacks.length; i++) {
+          const meta = routeStacks[i].meta;
+          if (meta.title) {
+            const breadcrumbItem = { title: meta.title };
+            if (!meta.isMenu) {
+              breadcrumbItem.route = { path: meta.key };
+            }
+            titles.push(breadcrumbItem);
+          }
+        }
+        this.pageTitles = [{ icon: 'icon-monitor', title: '控制台', route: { path: '/' } }, ...titles];
+      } else {
+        this.pageTitles = [];
+      }
+    },
     listenResize() {
       let windowWidth = window.innerWidth;
       const resizeEvent = window.addEventListener('resize', () => {
@@ -186,10 +206,15 @@ export default {
     },
     trigger(data) {
       if (data === 'logout') {
-        Utils.removeLocal('token');
-        this.$router.replace({ name: 'Login' });
+        R.Login.logout(this.$store.state.LoginUser).then(rep => {
+          if (rep.ok) {
+            Utils.removeLocal('token');
+            Utils.removeLocal('login_user');
+            this.$router.replace({ path: '/login' });
+          }
+        });
       } else {
-        this.$router.push({ name: 'AccountBasic' });
+        this.$router.push({ path: '/profile/account' });
       }
     },
     showSettingModal() {

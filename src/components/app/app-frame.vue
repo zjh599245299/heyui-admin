@@ -1,14 +1,19 @@
 <style lang="less">
-.left-menu {
+.left-menu,
+.main-content,
+.h-panel {
   &::-webkit-scrollbar {
     width: 0 !important;
   }
   scrollbar-width: none;
 }
+.main-content {
+  overflow: hidden !important;
+}
 </style>
 <template>
   <div>
-    <Layout :siderCollapsed="siderCollapsed" :siderFixed="layoutConfig.siderFixed" class="app-frame" v-if="!loading">
+    <Layout :siderCollapsed="siderCollapsed" :siderFixed="layoutConfig.siderFixed" class="app-frame">
       <Sider :theme="layoutConfig.siderTheme" class="left-menu">
         <appMenu :theme="layoutConfig.siderTheme"></appMenu>
       </Sider>
@@ -17,23 +22,22 @@
           <appHead :layoutConfig="layoutConfig" @openSetting="openSetting = true"></appHead>
         </HHeader>
         <SysTabs homePage="Home" v-if="layoutConfig.showSystab"></SysTabs>
-        <Content>
+        <h-content class="main-content">
           <div class="app-frame-content">
-            <!-- <keep-alive> -->
-            <div class="frame-page h-panel">
-              <div class="h-panel-bar" v-if="$route.meta && $route.meta.title">
-                <span class="h-panel-title">{{ $route.meta.title }}</span>
-              </div>
-              <div class="h-panel-body">
-                <router-view></router-view>
+            <div class="frame-page" style="position:absolute;top:15px;left: 15px;right: 15px;bottom: 15px;margin: 0">
+              <div class="h-panel" style="height: 100%;overflow: auto">
+                <div class="h-panel-bar" v-if="$route.meta.title">
+                  <div class="h-panel-title">{{ $route.meta.title }}</div>
+                </div>
+                <div class="h-panel-body">
+                  <!-- <keep-alive> -->
+                  <router-view></router-view>
+                  <!-- </keep-alive> -->
+                </div>
               </div>
             </div>
-            <!-- </keep-alive> -->
           </div>
-          <HFooter>
-            <appFooter></appFooter>
-          </HFooter>
-        </Content>
+        </h-content>
       </Layout>
     </Layout>
     <Modal type="drawer-right" v-model="openSetting">
@@ -45,11 +49,7 @@
 import appLayoutSetting from './modules/app-layout-setting';
 import appHead from './app-header';
 import appMenu from './app-menu';
-import appFooter from './app-footer';
-import SysTabs from '../common/sys-tabs';
-import store from 'js/vuex/store';
 import { mapState } from 'vuex';
-import { fullMenuKeys, isAuthPage } from 'js/config/menu-config';
 
 export default {
   data() {
@@ -67,59 +67,30 @@ export default {
   mounted() {
     // 如果无后台数据，将此处屏蔽
     this.init();
-
-    // 如果无后台数据，将此处打开
-    // this.loading = false;
-
-    const listener = G.addlistener('SYS_MENU_REFRESH', () => {
-      this.initMenu();
-    });
-    this.$once('hook:beforeDestroy', function() {
-      G.removelistener(listener);
-    });
   },
   methods: {
     init() {
-      this.$Loading('加载中');
-      R.User.info().then(resp => {
-        if (resp.ok) {
-          resp.body.avatar = require('../../images/avatar.png');
-          G.set('account', resp.body);
-          store.dispatch('updateAccount', resp.body);
-          this.initDict();
-          this.initMenu();
-        }
-      });
+      this.initDict();
+      this.initMenu();
     },
     initDict() {
       R.Dict.get().then(resp => {
         if (resp.ok) {
-          let dicts = resp.body;
-          for (let dict of dicts) {
+          const dicts = resp.body;
+          for (const dict of dicts) {
             HeyUI.addDict(dict.name, dict.data);
           }
         }
         this.loading = false;
-        this.$Loading.close();
       });
     },
     updateLayoutConfig({ key, value }) {
       this.layoutConfig[key] = value;
     },
     initMenu() {
-      // 如果使用权限配置，配合后端获取请求的数据
-      // R.Account.menus().then(resp => {
-      //   if (resp.ok) {
-      //     this.menus = getMenus(resp.body);
-      //     this.menuSelect();
-      //   }
-      // });
-      let menus = Utils.getLocal2Json('SYS_CONFIG_MENU') || fullMenuKeys;
+      const menus = Utils.getLocal2Json('SYS_CONFIG_MENU');
       G.set('SYS_MENUS', menus);
       G.trigger('SYS_MENU_UPDATE');
-      if (!isAuthPage(this.$route.name)) {
-        this.$router.replace({ name: 'PermissionError' });
-      }
     }
   },
   computed: {
@@ -128,8 +99,6 @@ export default {
   components: {
     appHead,
     appMenu,
-    SysTabs,
-    appFooter,
     appLayoutSetting
   }
 };

@@ -22,7 +22,7 @@ module.exports = {
     eqeqeq: 'off',
     'linebreak-style': ['error', 'unix'],
     'no-useless-call': 'off',
-    'space-before-function-paren': ['error', { anonymous: 'always', named: 'never', asyncArrow: 'always' }]
+    'space-before-function-paren': ['error', { anonymous: 'never', named: 'never', asyncArrow: 'always' }]
   },
   parserOptions: {
     parser: 'babel-eslint'

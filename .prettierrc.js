@@ -1,5 +1,4 @@
 module.exports = {
-  eslintIntegration: true,
   proseWrap: 'always',
   printWidth: 150, // 每行代码长度（默认80）
   vueIndentScriptAndStyle: false, // vue中的js和css是否缩进

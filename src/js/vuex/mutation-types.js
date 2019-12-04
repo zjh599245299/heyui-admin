@@ -1,4 +1,6 @@
 /* *************** 根级别状态名称 *************** */
+// 登录用户信息
+export const UPDATE_LOGIN_USER = 'UPDATE_LOGIN_USER';
 // 更新用户信息
 export const UPDATE_ACCOUNT = 'UPDATE_ACCOUNT';
 // 菜单展开状态

@@ -4,8 +4,9 @@ module.exports = {
   port: 9012,
   root: 'dist',
   stat: false,
+  openBrowser: false,
   webpack: {
-    console: true,
+    console: false,
     publicPath: '/',
     output: {
       './index.html': {
@@ -13,6 +14,7 @@ module.exports = {
       }
     },
     alias: {
+      node_modules: './node_modules/',
       model: './src/js/model/',
       js: './src/js/',
       components: './src/components/',
@@ -30,14 +32,17 @@ module.exports = {
     devServer: {
       proxy: {
         // 此处应该配置为开发服务器的后台地址
-        // '/api': {
-        //   target: 'http://xxx.xx.xx'
-        // }
+        '/api': {
+          target: 'http://localhost:8080',
+          pathRewrite: {
+            '^/api': ''
+          }
+        }
       },
       historyApiFallback: true
     },
     globalVars: './src/css/var.less',
     externals: {}
   },
-  copy: ['static/images/*', 'call/*', './baidu_verify_7O2vpVMzwg.html']
+  copy: ['static/images/*', 'call/*']
 };
