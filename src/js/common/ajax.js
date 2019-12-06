@@ -1,6 +1,7 @@
 import axios from 'axios';
 import qs from 'qs';
 import Utils from './utils';
+import router from 'js/router';
 
 const DefaultParam = { repeatable: false };
 
@@ -122,7 +123,7 @@ const ajax = {
           }
           if (status !== 200) {
             if (status === 401) {
-              window.top.location = '/login';
+              router.replace({ path: '/login' }).then(() => HeyUI.$Message.error('登录超时,请重新登录'));
               return;
             }
             if (status === 500) {

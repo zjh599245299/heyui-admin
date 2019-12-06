@@ -1,13 +1,15 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import AppFrame from 'components/app/app-frame';
+import AppFrame from 'components/App/AppFrame';
 
 import Login from 'views/login/index';
-import Dashboard from 'views/dashboard/index';
-import manageRouters from './modules/manage-router';
 
 Vue.use(VueRouter);
 
+let asyncRoutes = [];
+if (Utils.getLocal2Json('sys_menus')) {
+  asyncRoutes = Utils.getAsyncRoutes(Utils.getLocal2Json('sys_menus'));
+}
 const routerParam = {
   mode: 'history',
   routes: [
@@ -19,37 +21,40 @@ const routerParam = {
     {
       path: '/',
       component: AppFrame,
-      redirect: '/dashboard',
+      redirect: '/home',
       hideInMenu: true,
       children: [
         {
-          path: '/dashboard',
-          component: Dashboard,
-          meta: { title: '控制台', icon: 'icon-monitor', key: '/dashboard' }
+          path: '/home',
+          component: () => import('views/home')
+        },
+        {
+          path: '/profile',
+          component: () => import('views/profile/index'),
+          hideInMenu: true,
+          meta: { title: '设置中心' }
         },
         {
           path: '/403',
           hideInMenu: true,
-          component: () => import('views/error-pages/403'),
-          meta: { key: '/403' }
+          component: () => import('views/error-pages/403')
         },
         {
           path: '/404',
           hideInMenu: true,
-          component: () => import('views/error-pages/404'),
-          meta: { key: '/404' }
+          component: () => import('views/error-pages/404')
         },
         {
           path: '/500',
           hideInMenu: true,
-          component: () => import('views/error-pages/500'),
-          meta: { key: '/500' }
+          component: () => import('views/error-pages/500')
         },
-        manageRouters
+        ...asyncRoutes
       ]
     },
     {
       path: '*',
+      hideInMenu: true,
       redirect: '/404'
     }
   ]

@@ -35,7 +35,7 @@
 </style>
 <template>
   <div class="app-logo">
-    <router-link to="/"><span class="app-logo-icon"></span><span class="app-logo-text">HEYUI ADMIN</span></router-link>
+    <router-link to="/"><span class="app-logo-icon"></span><span class="app-logo-text">CLOUD ADMIN</span></router-link>
   </div>
 </template>
 <script>

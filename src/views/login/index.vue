@@ -1,3 +1,58 @@
+<template>
+  <div class="login-vue">
+    <div class="login-container">
+      <div class="login-content">
+        <div class="login-title">AdminPro 管理系统</div>
+        <div class="login-name login-input">
+          <input autocomplete="off" name="username" type="text" v-model="login.username" />
+          <span :class="{ fixed: login.username !== '' && login.username != null }" class="placeholder">
+            用户名
+          </span>
+        </div>
+        <div class="login-password login-input">
+          <input @keyup.enter="submit" autocomplete="off" name="password" type="password" v-model="login.password" />
+          <span :class="{ fixed: login.password !== '' && login.password != null }" class="placeholder">
+            密码
+          </span>
+        </div>
+        <div class="buttonDiv">
+          <Button :loading="loading" @click="submit" block color="primary" size="l">
+            登录
+          </Button>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+<script>
+import Login from 'model/login/Login';
+
+export default {
+  data() {
+    return {
+      login: Login.parse({
+        username: 'admin',
+        password: '111111'
+      }),
+      loading: false
+    };
+  },
+  mounted() {},
+  methods: {
+    submit() {
+      this.loading = true;
+      R.Login.login(Login.dispose(this.login)).then(resp => {
+        if (resp.ok) {
+          const user = resp.data;
+          this.$store.commit('UPDATE_LOGIN_USER', user);
+          this.$router.push('/');
+        }
+        this.loading = false;
+      });
+    }
+  }
+};
+</script>
 <style lang="less">
 @gradient-color: #3788ee;
 @bg-color: #f7f8fa;
@@ -77,10 +132,10 @@
         }
 
         &.login-title {
-          font-size: 30px;
+          font-size: 26px;
           color: @title-color;
           line-height: 1;
-          margin: -16px 0px 40px;
+          margin: -16px 0 40px;
           font-weight: 200;
         }
       }
@@ -117,63 +172,3 @@
   }
 }
 </style>
-
-<template>
-  <div class="login-vue">
-    <div class="login-container">
-      <div class="login-content">
-        <div class="login-title">管理系统</div>
-        <div class="login-name login-input">
-          <input autocomplete="off" name="username" type="text" v-model="login.username" />
-          <span :class="{ fixed: login.username !== '' && login.username != null }" class="placeholder">
-            用户名
-          </span>
-        </div>
-        <div class="login-password login-input">
-          <input @keyup.enter="submit" autocomplete="off" name="password" type="password" v-model="login.password" />
-          <span :class="{ fixed: login.password !== '' && login.password != null }" class="placeholder">
-            密码
-          </span>
-        </div>
-        <div class="buttonDiv">
-          <Button :loading="loading" @click="submit" block color="primary" size="l">
-            登录
-          </Button>
-        </div>
-      </div>
-      <p class="copyright">
-        Copyright © 2019 vvpvvp -
-        <a href="https://www.heyui.top/">heyui.top</a>
-      </p>
-    </div>
-  </div>
-</template>
-<script>
-import Login from 'model/login/Login';
-
-export default {
-  data() {
-    return {
-      login: Login.parse({
-        username: 'admin',
-        password: 'admin'
-      }),
-      loading: false
-    };
-  },
-  mounted() {},
-  methods: {
-    submit() {
-      this.loading = true;
-      R.Login.login(Login.dispose(this.login)).then(resp => {
-        if (resp.ok) {
-          const user = resp.data;
-          this.$store.commit('UPDATE_LOGIN_USER', user);
-          this.$router.push('/');
-        }
-        this.loading = false;
-      });
-    }
-  }
-};
-</script>

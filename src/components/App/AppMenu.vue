@@ -2,28 +2,35 @@
 .app-menu {
   .h-menu {
     font-size: 14px;
+
     .h-menu-li-selected {
       .h-menu-show:after {
         width: 4px;
       }
     }
+
     > li > .h-menu-show {
-      padding: 12px 25px;
+      padding: 13px 25px;
       font-size: 15px;
+
       .h-menu-show-icon {
         font-size: 20px;
       }
+
       .h-menu-show-desc {
         transition: opacity 0.1s cubic-bezier(0.645, 0.045, 0.355, 1), width 0.1s cubic-bezier(0.645, 0.045, 0.355, 1);
       }
     }
   }
+
   .h-menu.h-menu-size-collapse > .h-menu-li > .h-menu-show {
     padding-left: 24px;
+
     .h-menu-show-icon {
       font-size: 20px;
     }
   }
+
   .h-menu.h-menu-white {
     color: rgb(49, 58, 70);
   }
@@ -32,22 +39,18 @@
 <template>
   <div class="app-menu">
     <appLogo></appLogo>
-    <Menu :datas="menus" :inlineCollapsed="siderCollapsed" @click="trigger" ref="menu" :className="`h-menu-${theme}`"></Menu>
-    <div class="app-menu-mask" @click="hideMenu"></div>
+    <Menu :className="`h-menu-${theme}`" :datas="menus" :inlineCollapsed="siderCollapsed" @click="trigger" ref="menu"></Menu>
+    <div @click="hideMenu" class="app-menu-mask"></div>
   </div>
 </template>
 <script>
 import { mapState } from 'vuex';
-import appLogo from './app-logo';
+import appLogo from './AppLogo';
 
 export default {
   props: {
-    theme: String
-  },
-  data() {
-    return {
-      menus: []
-    };
+    theme: String,
+    menusData: Array
   },
   watch: {
     $route() {
@@ -55,24 +58,25 @@ export default {
     }
   },
   mounted() {
-    this.init();
+    this.$nextTick(() => {
+      setTimeout(() => {
+        this.menuSelect();
+      }, 50);
+    });
     const listener = G.addlistener('SYS_MENU_UPDATE', () => {
-      this.init();
+      this.menuSelect();
     });
     this.$once('hook:beforeDestroy', function() {
       G.removelistener(listener);
     });
   },
   computed: {
-    ...mapState(['siderCollapsed'])
+    ...mapState(['siderCollapsed']),
+    menus: function() {
+      return this.createMenuData(this.menusData);
+    }
   },
   methods: {
-    init() {
-      this.menus = this.getMenuData(this.$router.options.routes);
-      this.$nextTick(() => {
-        this.menuSelect();
-      });
-    },
     menuSelect() {
       if (this.$route.path) {
         let selectedPath;
@@ -86,26 +90,27 @@ export default {
       }
     },
     trigger(data) {
-      if (data.children.length > 0) return;
+      if (data.children.length > 0 || this.$route.path === data.key) return;
       this.$router.push({ path: data.key });
     },
     hideMenu() {
       this.$store.commit('UPDATE_SIDERCOLLAPSE', true);
     },
-    getMenuData(routes = []) {
+
+    createMenuData(data = []) {
       const menuData = [];
-      for (const item of routes) {
-        if (!item.hideInMenu) {
-          const newItem = { ...item.meta };
+      for (const item of data) {
+        if (item.hideInMenu === '0') {
+          const newItem = { title: item.title, key: item.path, icon: item.icon || 'icon-fast-forward' };
           delete newItem.children;
-          if (item.children && !item.hideChildrenInMenu) {
-            newItem.children = this.getMenuData(item.children);
+          if (item.children) {
+            newItem.children = this.createMenuData(item.children);
           } else {
-            this.getMenuData(item.children);
+            this.createMenuData(item.children);
           }
           menuData.push(newItem);
         } else if (!item.hideChildrenInMenu && item.children) {
-          menuData.push(...this.getMenuData(item.children));
+          menuData.push(...this.createMenuData(item.children));
         }
       }
       return menuData;

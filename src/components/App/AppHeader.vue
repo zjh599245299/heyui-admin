@@ -103,7 +103,7 @@
     <Breadcrumb :datas="pageTitles" style="display: inline-block;margin-left: 10px;" />
     <div class="float-right app-header-info">
       <AutoComplete :showDropdownWhenNoResult="false" v-width="180" v-model="searchText" placeholder="全局搜索..." />
-      <appHeaderMessage />
+      <AppHeaderMessage />
       <DropdownMenu
         className="app-header-dropdown"
         trigger="hover"
@@ -122,16 +122,16 @@
 </template>
 <script>
 import { mapState } from 'vuex';
-import appHeaderMessage from './modules/app-header-message';
+import AppHeaderMessage from './modules/AppHeaderMessage';
 export default {
   components: {
-    appHeaderMessage
+    AppHeaderMessage
   },
   data() {
     return {
       searchText: '',
       infoMenu: [
-        { key: 'info', title: '个人信息', icon: 'h-icon-user' },
+        { key: 'info', title: '设置中心', icon: 'h-icon-user' },
         { key: 'logout', title: '退出登录', icon: 'h-icon-outbox' }
       ],
       pageTitles: []
@@ -163,7 +163,7 @@ export default {
   methods: {
     getBreadCrumbData() {
       const routeStacks = this.$route.matched;
-      if (routeStacks && routeStacks.length > 2) {
+      if (routeStacks && routeStacks.length >= 2) {
         const titles = [];
         for (let i = 1; i < routeStacks.length; i++) {
           const meta = routeStacks[i].meta;
@@ -175,7 +175,13 @@ export default {
             titles.push(breadcrumbItem);
           }
         }
-        this.pageTitles = [{ icon: 'icon-monitor', title: '控制台', route: { path: '/' } }, ...titles];
+        if (this.$route.path === '/home') {
+          this.pageTitles = [];
+        } else if (this.$route.path === '/dashboard') {
+          this.pageTitles = [...titles];
+        } else {
+          this.pageTitles = [{ icon: 'icon-monitor', title: '首页', route: { path: '/home' } }, ...titles];
+        }
       } else {
         this.pageTitles = [];
       }
@@ -210,11 +216,12 @@ export default {
           if (rep.ok) {
             Utils.removeLocal('token');
             Utils.removeLocal('login_user');
+            Utils.removeLocal('sys_menus');
             this.$router.replace({ path: '/login' });
           }
         });
       } else {
-        this.$router.push({ path: '/profile/account' });
+        this.$router.push({ path: '/profile' });
       }
     },
     showSettingModal() {

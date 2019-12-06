@@ -17,7 +17,12 @@ const Request = {
     }
   },
   Account: {
-    menus() {}
+    getMenu() {
+      return Ajax.get('/account/getMenu');
+    },
+    resetPassword(param) {
+      return Ajax.post('/account/resetPassword', param);
+    }
   },
   Login: {
     login(param) {
