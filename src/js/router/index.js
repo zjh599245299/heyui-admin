@@ -29,6 +29,11 @@ const routerParam = {
           component: () => import('views/home')
         },
         {
+          path: '/icons',
+          component: () => import('views/icons'),
+          meta: { title: '系统图标库' }
+        },
+        {
           path: '/profile',
           component: () => import('views/profile/index'),
           hideInMenu: true,
@@ -69,6 +74,11 @@ router.beforeEach((to, from, next) => {
     HeyUI.$Message.error('用户登录超时，请重新登录');
     next('/login');
     return;
+  }
+  if (to.meta && to.meta.title) {
+    document.title = '管理系统-' + to.meta.title;
+  } else {
+    document.title = '管理系统';
   }
   next();
 });

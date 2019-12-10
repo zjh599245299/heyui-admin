@@ -1,6 +1,7 @@
 import '@babel/polyfill';
 import Vue from 'vue';
 import App from '@/views/App';
+import './icons';
 // heyui相关配置
 import heyuiConfig from 'js/config/heyui-config';
 // 路由配置

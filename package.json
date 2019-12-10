@@ -40,7 +40,8 @@
     "eslint-plugin-standard": "^4.0.1",
     "eslint-plugin-vue": "^6.0.1",
     "mockjs": "^1.1.0",
-    "prettier": "^1.19.1"
+    "prettier": "^1.19.1",
+    "svg-sprite-loader": "^4.1.6"
   },
   "scripts": {
     "serve": "hey dev",

@@ -1,7 +1,7 @@
 <template>
   <div>
     <template v-if="$route.path === '/manage/role'">
-      <p>角色管理</p>
+      <div>角色管理</div>
       <router-link to="/manage/role/add" tag="Button">添加角色</router-link>
       <Button color="primary">添加角色</Button>
     </template>

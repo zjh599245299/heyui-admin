@@ -4,18 +4,14 @@
   </div>
 </template>
 <script>
-
 import store from 'js/vuex/store';
 
 export default {
   data() {
-    return {
-    };
+    return {};
   },
   store,
-  mounted() {
-  },
-  methods: {
-  }
+  mounted() {},
+  methods: {}
 };
 </script>

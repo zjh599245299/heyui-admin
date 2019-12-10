@@ -1,6 +1,6 @@
 <template>
   <div class="app-frame-content">
-    <div class="frame-page" style="position:absolute;top:15px;left: 15px;right: 15px;bottom: 15px;margin: 0">
+    <div class="frame-page" style="position:absolute;top:15px;left: 15px;right: 0;bottom: 0;margin: 0">
       <div class="h-panel" style="height: 100%;overflow: auto">
         <div class="h-panel-bar" v-if="$route.meta.title">
           <div class="h-panel-title">{{ $route.meta.title }}</div>

@@ -31,7 +31,7 @@ export default utils.extend({}, utils, {
         item.component = { render: h => h('router-view') };
       }
       if (item.children) {
-        this.getAsyncRoutes(item.children);
+        item.children = this.getAsyncRoutes(item.children);
       }
     });
     return data;
